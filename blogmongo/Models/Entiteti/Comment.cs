@@ -6,14 +6,14 @@ using System.Web;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace NBPBlogoviTest.Models.Entiteti
+namespace blogmongo.Models.Entiteti
 {
     public class Comment
     {
-        ObjectId Id { get; set; }
+        public ObjectId Id { get; set; }
         public string Username { get; set; }
         public string Message { get; set; }
-        BsonDateTime DateCreated { get; set; }
+        public BsonDateTime DateCreated { get; set; }
         public int Likes { get; set; }
     }
 }

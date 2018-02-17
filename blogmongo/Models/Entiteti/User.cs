@@ -6,7 +6,7 @@ using System.Web;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace NBPBlogoviTest.Models.Entiteti
+namespace blogmongo.Models.Entiteti
 {
     public class User
     {
