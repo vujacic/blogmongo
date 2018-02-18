@@ -10,7 +10,7 @@
     {
         <div class="border">
             <h2>@bp.Title</h2>
-            <p>@bp.Description</p>
+            <p>@bp.Description.Substring(0,Math.Min(bp.Description.Length, 1000))...</p>
         </div>
     }
 </div>
