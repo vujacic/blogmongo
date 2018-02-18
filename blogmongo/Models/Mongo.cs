@@ -30,6 +30,15 @@ namespace blogmongo.Models
             return lista.ToList<BlogPost>();
         }
 
+        public List<BlogPost> vratiFavoriteAutora(string id)
+        {
+            var collection = this.database.GetCollection<User>("useri");
+            ObjectId novi = new ObjectId(id);
+            var lista = collection.Find(x => x.Id == novi);
+            List<User> korisnici = lista.ToList<User>();
+            return korisnici[0].Favorites;
+        }
+
         public BlogPost vratiJedanBlog(string id)
         {
             var collection = this.database.GetCollection<BlogPost>("blogovi");

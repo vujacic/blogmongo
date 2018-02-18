@@ -1,0 +1,17 @@
+﻿@using blogmongo.Models.Entiteti
+@model List<BlogPost>
+@{
+    ViewBag.Title = "Favorites";
+}
+
+<h2>Favorites</h2>
+<div>
+    @foreach(BlogPost bp in Model)
+    {
+        <div class="border">
+            <h2>@bp.Title</h2>
+            <p>@bp.Description</p>
+        </div>
+    }
+</div>
+
