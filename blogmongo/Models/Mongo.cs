@@ -115,5 +115,14 @@ namespace blogmongo.Models
             }
         }
 
+        public void updateUsera(string ime,string prezime,string opis,string id)
+        {
+            var collection = this.database.GetCollection<User>("useri");
+            ObjectId oid = new ObjectId(id);
+            var filter = Builders<User>.Filter.Eq("Id", oid);
+            var update = Builders<User>.Update.Set("Ime", ime).Set("Prezime", prezime).Set("Opis", opis);
+            collection.UpdateOne(filter, update);
+        }
+
     }
 }
