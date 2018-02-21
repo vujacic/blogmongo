@@ -30,6 +30,14 @@ namespace blogmongo.Models
             return lista.ToList<BlogPost>();
         }
 
+        public List<BlogPost> vratiNBlogovaAutora(string id,int pageIndex,int number)
+        {
+            var collection = this.database.GetCollection<BlogPost>("blogovi");
+            ObjectId novi = new ObjectId(id);
+            var lista = collection.Find(x => x.Author == novi).Skip(pageIndex*number).Limit(number);
+            return lista.ToList<BlogPost>();
+        }
+
         public List<BlogPost> vratiFavoriteAutora(string id)
         {
             var collection = this.database.GetCollection<User>("useri");
@@ -37,6 +45,16 @@ namespace blogmongo.Models
             var lista = collection.Find(x => x.Id == novi);
             List<User> korisnici = lista.ToList<User>();
             return korisnici[0].Favorites;
+        }
+
+        public List<BlogPost> vratiNFavoritaAutora(string id,int pageIndex,int pageSize)
+        {
+            var collection = this.database.GetCollection<User>("useri");
+            ObjectId novi = new ObjectId(id);
+            var lista = collection.Find(x => x.Id == novi);
+            List<User> korisnici = lista.ToList<User>();
+            return korisnici[0].Favorites.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+             
         }
 
         public BlogPost vratiJedanBlog(string id)

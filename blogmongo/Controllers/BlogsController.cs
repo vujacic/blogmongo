@@ -25,8 +25,17 @@ namespace blogmongo.Controllers
         // GET: BlogoviOsobe/Details/5
         public ActionResult Details(/*int id*/string id)
         {
-            List<BlogPost> postovi = mon.vratiSveBlogoveAutora(/*mongoID*/id);
-            return View(postovi);
+            //List<BlogPost> postovi = mon.vratiSveBlogoveAutora(/*mongoID*/id);
+            //return View(postovi);
+            ViewBag.ID = id;
+            return View();
+        }
+        
+        [HttpGet]
+        public ActionResult GetData(string id,int pageIndex,int pageSize)
+        {
+            List<BlogPost> blogovi = mon.vratiNBlogovaAutora(id, pageIndex, pageSize);
+            return Json(blogovi,JsonRequestBehavior.AllowGet);
         }
 
         // GET: BlogoviOsobe/Create

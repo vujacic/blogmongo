@@ -1,17 +1,47 @@
 ﻿@using blogmongo.Models.Entiteti
-@model List<BlogPost>
 @{
     ViewBag.Title = "Blogs";
 }
 
 <h2>My Blogs</h2>
-<div class="container">
-    @foreach (BlogPost bp in Model)
-    {
-        <div class="border">
-            <h2>@bp.Title</h2>
-            <p>@bp.Description.Substring(0,Math.Min(bp.Description.Length, 1000))...</p>
-        </div>
+<div id="container"></div>
+<input type="hidden" id="hid" value=@ViewBag.ID />
+@section Scripts{
+<script type="text/javascript">
+    var pageSize = 5;
+    var pageIndex = 0;
+    $(document).ready(function () {
+        GetData();
+        $(window).scroll(function () {
+            if ($(window).scrollTop() + $(window).height() == $(document).height()){
+                GetData();
+            }
+        });
+    });
+
+    function GetData() {
+        $.ajax({
+            type: 'GET',
+            url: '/Blogs/GetData',
+            data: {
+                "id": $("#hid").val(), "pageIndex": pageIndex, "pageSize": pageSize
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                if (data != null) {
+                    for (var i = 0; i < data.length; i++) {
+                        //$("#container").append("<h2>" + data[i]["Title"] + "</h2>" + "<p>" + data[i]["Description"] + "</p>");
+                        $("#container").append("<h2>" + data[i]["Title"] + "</h2>" + "<p>"
+                            + data[i]["Description"].substring(0, Math.min(data[i]["Description"].length, 1000))
+                            + "..." + "</p>");
+                    }
+                    pageIndex++;
+
+                }
+            },
+        });
     }
-</div>
+</script>
+}
 

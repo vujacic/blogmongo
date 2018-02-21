@@ -26,8 +26,16 @@ namespace blogmongo.Controllers
         // GET: Favorites/Details/5
         public ActionResult Details(/*int id*/string id)
         {
-            List<BlogPost> favoriti = mon.vratiFavoriteAutora(id);
-            return View(favoriti);
+            //List<BlogPost> favoriti = mon.vratiFavoriteAutora(id);
+            //return View(favoriti);
+            ViewBag.ID = id;
+            return View();
+        }
+        
+        public ActionResult GetData(string id, int pageIndex, int pageSize)
+        {
+            List<BlogPost> blogovi = mon.vratiNFavoritaAutora(id, pageIndex, pageSize);
+            return Json(blogovi,JsonRequestBehavior.AllowGet);
         }
 
         // GET: Favorites/Create
