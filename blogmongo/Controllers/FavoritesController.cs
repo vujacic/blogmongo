@@ -8,6 +8,7 @@ using blogmongo.Models;
 
 namespace blogmongo.Controllers
 {
+    [Authorize]
     public class FavoritesController : Controller
     {
         Mongo mon;

@@ -8,6 +8,7 @@ using blogmongo.Models.Entiteti;
 
 namespace blogmongo.Controllers
 {
+    [Authorize]
     public class ProfileController : Controller
     {
         Mongo mon;

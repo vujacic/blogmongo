@@ -142,5 +142,22 @@ namespace blogmongo.Models
             collection.UpdateOne(filter, update);
         }
 
+        public void kreirajUsera(string ime, string prezime, string email)
+        {
+            User novi = new User { Ime = ime, Prezime = prezime, Email = email};
+            var collection = this.database.GetCollection<User>("useri");
+            collection.InsertOne(novi);
+        }
+
+        public string vratiIdPoEmailu(string email)
+        {
+            var collection = this.database.GetCollection<User>("useri");
+            //ObjectId novi = new ObjectId(id);
+            var lista = collection.Find(x => x.Email == email);
+            return lista.ToList<User>()[0].Id.ToString();
+
+
+        }
+
     }
 }

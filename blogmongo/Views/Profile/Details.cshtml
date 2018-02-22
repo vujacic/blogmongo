@@ -14,3 +14,15 @@
 
 <p>@Model.Opis</p>
 
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (@Profile.UserName==@Model.Email){
+                $("#update").show();
+            }
+            else {
+                $("#update").hide();
+            }
+        });
+      </script>
+    }

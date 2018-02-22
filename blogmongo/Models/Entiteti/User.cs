@@ -13,6 +13,7 @@ namespace blogmongo.Models.Entiteti
         public ObjectId Id { get; set; }
         public string Ime { get; set; }
         public string Prezime { get; set; }
+        public string Email { get; set; }
         public string Opis { get; set; }      
         public List<BlogPost> Blogs { get; set; }   
         public List<BlogPost> Favorites { get; set; }
