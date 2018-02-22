@@ -1,12 +1,13 @@
 ﻿@using blogmongo.Models.Entiteti
+@using Microsoft.AspNet.Identity
 @model User
 @{
-    ViewBag.Title = Model.Ime +" "+ Model.Prezime;
+    ViewBag.Title = Model.Ime + " " + Model.Prezime;
 }
 
 <div>
     <button id="blogs" class="btn" onclick="location.href='@Url.Action("Details","Blogs")/@Model.Id.ToString()'">Blogs</button>
-    <button id="favorites" class="btn"  onclick="location.href='@Url.Action("Details","Favorites")/@Model.Id.ToString()'">Favorites</button>
+    <button id="favorites" class="btn" onclick="location.href='@Url.Action("Details","Favorites")/@Model.Id.ToString()'">Favorites</button>
     <button id="update" class="btn" onclick="location.href='@Url.Action("Edit","Profile")/@Model.Id.ToString()'">Edit profile</button>
 </div>
 
@@ -17,12 +18,14 @@
 @section Scripts {
     <script type="text/javascript">
         $(document).ready(function () {
-            if (@Profile.UserName==@Model.Email){
+            var p = "@Model.Email";
+            var q = "@User.Identity.GetUserName()";
+            if (p==q){
                 $("#update").show();
             }
             else {
                 $("#update").hide();
             }
         });
-      </script>
-    }
+    </script>
+}
