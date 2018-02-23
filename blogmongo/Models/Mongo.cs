@@ -57,6 +57,16 @@ namespace blogmongo.Models
              
         }
 
+        public List<BlogPost> vratiNBlogovaAutoraLista(string id, int pageIndex, int pageSize)
+        {
+            var collection = this.database.GetCollection<User>("useri");
+            ObjectId novi = new ObjectId(id);
+            var lista = collection.Find(x => x.Id == novi);
+            List<User> korisnici = lista.ToList<User>();
+            return korisnici[0].Blogs.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+
+        }
+
         public BlogPost vratiJedanBlog(string id)
         {
             var collection = this.database.GetCollection<BlogPost>("blogovi");
