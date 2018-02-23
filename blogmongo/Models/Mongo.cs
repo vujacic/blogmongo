@@ -149,12 +149,12 @@ namespace blogmongo.Models
             collection.InsertOne(novi);
         }
 
-        public string vratiIdPoEmailu(string email)
+        public User vratiUseraPoEmailu(string email)
         {
             var collection = this.database.GetCollection<User>("useri");
             //ObjectId novi = new ObjectId(id);
             var lista = collection.Find(x => x.Email == email);
-            return lista.ToList<User>()[0].Id.ToString();
+            return lista.ToList<User>()[0];
 
 
         }
