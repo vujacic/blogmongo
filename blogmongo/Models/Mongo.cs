@@ -44,7 +44,18 @@ namespace blogmongo.Models
             ObjectId novi = new ObjectId(id);
             var lista = collection.Find(x => x.Id == novi);
             List<User> korisnici = lista.ToList<User>();
-            return korisnici[0].Favorites;
+            if (korisnici[0].Favorites != null)
+                return korisnici[0].Favorites;
+            else
+            {
+                List<BlogPost> novaLista = new List<BlogPost>();
+                korisnici[0].Favorites = novaLista;
+                var filter = Builders<User>.Filter.Eq("Id", korisnici[0].Id);
+                var update = Builders<User>.Update.Set("Favorites", novaLista);
+                collection.UpdateOne(filter, update);
+                return korisnici[0].Favorites;
+            }
+            
         }
 
         public List<BlogPost> vratiNFavoritaAutora(string id,int pageIndex,int pageSize)
