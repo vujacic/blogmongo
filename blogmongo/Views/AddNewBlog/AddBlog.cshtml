@@ -1,0 +1,27 @@
+﻿@using blogmongo.Models.Entiteti
+@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "Add new blog";
+}
+
+<h2>Add a new blog</h2>
+
+@using (Html.BeginForm())
+{
+    <div>
+        <label>Title</label>
+        <input type="text" name="title" id="title" class="form-control" />
+    </div>
+    <div>
+        <label>Description</label>
+        <textarea class="form-control"
+                  cols="20"
+                  id="description"
+                  name="description"
+                  rows="2"></textarea>
+    </div>
+    <div>
+        <input type="submit" value="Add" />
+        <input type="hidden" name="email" id="email" value="@User.Identity.GetUserName()" />
+    </div>
+}

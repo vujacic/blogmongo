@@ -1,0 +1,58 @@
+﻿@using blogmongo.Models.Entiteti
+@using blogmongo.Controllers
+@using Microsoft.AspNet.Identity
+@model BlogPost
+@{
+    ViewBag.Title = Model.Title;
+}
+
+<div>
+    <h2>@Model.Title</h2>
+    <button id="fav" class="btn">Add to Favorites</button>
+    <button id="del" class="btn">Delete blog</button>
+    <p>@Model.Description</p>
+</div>
+
+@section Scripts{
+<script type="text/javascript">
+
+        $(document).ready(function () {
+            var user = "@User.Identity.GetUserName()";
+            var author = "@ViewBag.Email";
+            if (user == author) {
+                $("#del").show();
+            }
+            else {
+                $("#del").hide();
+            }
+
+        });
+
+        $("#del").on("click", function () {
+            $.ajax({
+                type: 'POST',
+                url: '/Blog/Brisi',
+                data: {
+                    "blogID": "@Model.Id.ToString()", "email": "@User.Identity.GetUserName()", "userID":"@ViewBag.ID"
+                },
+                success: function () {
+                    location.href = "@Url.Action("Index","Home")";
+                },
+            });
+        });
+
+        $("#fav").on("click", function () {
+            $.ajax({
+                type: 'POST',
+                url: '/Blog/AddFavorite',
+                data: {
+                    "blogID": "@Model.Id.ToString()", "email": "@User.Identity.GetUserName()"
+                },
+                dataType: 'json',
+                success: function () {
+
+                },
+            });
+        });
+</script>
+}

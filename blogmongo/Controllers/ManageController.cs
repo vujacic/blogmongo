@@ -7,6 +7,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using blogmongo.Models;
+using blogmongo.Models.Entiteti;
+using blogmongo.Models;
 
 namespace blogmongo.Controllers
 {
@@ -50,6 +52,13 @@ namespace blogmongo.Controllers
             }
         }
 
+        public ActionResult Profil(string email)
+        {
+            Mongo mon = new Mongo();
+            string id = mon.vratiUseraPoEmailu(email).Id.ToString();
+            return RedirectToAction("Details", "Profile", new { id = id });
+        }
+
         //
         // GET: /Manage/Index
         public async Task<ActionResult> Index(ManageMessageId? message)
@@ -74,6 +83,8 @@ namespace blogmongo.Controllers
             };
             return View(model);
         }
+
+
 
         //
         // POST: /Manage/RemoveLogin

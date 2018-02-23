@@ -14,8 +14,8 @@ namespace blogmongo.Models.Entiteti
         public string Title { get; set; }
         public string Description { get; set; }
         public ObjectId Author { get; set; }  // ili MongoDBRef
-        public List<string> Tags { get; set; }
-        public int Likes { get; set; } 
+       // public List<string> Tags { get; set; }
+       // public int Likes { get; set; } 
         public List<Comment> Comments { get; set; }
 
     }

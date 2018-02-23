@@ -57,6 +57,21 @@ namespace blogmongo.Models
              
         }
 
+        public void brisiBlog(string id,string email)
+        {
+            var collection = this.database.GetCollection<BlogPost>("blogovi");
+            var collectionNova = this.database.GetCollection<User>("useri");
+            ObjectId asd = new ObjectId(id);
+            var filter = Builders<BlogPost>.Filter.Eq("Id", asd);
+            var filterNOvi = Builders<User>.Filter.Eq("Email", email);
+            User korisnik = vratiUseraPoEmailu(email);
+            korisnik.Blogs.Remove(korisnik.Blogs.Find(x => x.Id.ToString() == id));
+            var update = Builders<User>.Update.Set("Blogs", korisnik.Blogs);
+
+            collection.DeleteOne(filter);
+            collectionNova.UpdateOne(filterNOvi, update);
+        }
+
         public List<BlogPost> vratiNBlogovaAutoraLista(string id, int pageIndex, int pageSize)
         {
             var collection = this.database.GetCollection<User>("useri");
@@ -86,62 +101,80 @@ namespace blogmongo.Models
 
         public void kreirajBlog(BlogNew bn)
         {
-            BlogPost bp = new BlogPost { Title = bn.title, Description = bn.description, Tags = bn.tagovi, Author = new ObjectId(bn.autorId) };
+            BlogPost bp = new BlogPost { Title = bn.title, Description = bn.description, Author = new ObjectId(bn.autorId) };
             var collection = this.database.GetCollection<BlogPost>("blogovi");
+            var collectionNova = this.database.GetCollection<User>("useri");
             collection.InsertOne(bp);
-        }
-
-        public void dodajKomentar(string user, string mess, BsonDateTime date, string idBloga)
-        {
-            var collection = this.database.GetCollection<BlogPost>("blogovi");
-            BlogPost bp = vratiJedanBlog(idBloga);
-            Comment com = new Comment { Username = user, Message = mess, DateCreated = date };
-            List<Comment> novaListaKomentara;
-            if (bp.Comments != null)
-            {
-                novaListaKomentara = bp.Comments;
-                novaListaKomentara.Add(com);
-            }
+            ObjectId iod = new ObjectId(bn.autorId);
+            var lista = collectionNova.Find(x => x.Id == iod);
+            User korisnik = lista.ToList()[0];
+            if (korisnik.Blogs != null)
+                korisnik.Blogs.Add(bp);
             else
             {
-                novaListaKomentara = new List<Comment>();
-                novaListaKomentara.Add(com);
+                korisnik.Blogs = new List<BlogPost>();
+                korisnik.Blogs.Add(bp);
             }
-            ObjectId oid = new ObjectId(idBloga);
-
-            var filter = Builders<BlogPost>.Filter.Eq("Id", oid);
-            var update = Builders<BlogPost>.Update.Set("Comments", novaListaKomentara);
-
-            collection.UpdateOne(filter, update);
             
+            var filter = Builders<User>.Filter.Eq("Id", iod);
+            var update = Builders<User>.Update.Set("Blogs", korisnik.Blogs);
+
+            collectionNova.UpdateOne(filter, update);
+
+
         }
 
-        public void lajkuj(string idBloga, string idKomentara, bool komentar)
-        {
-            var collection = this.database.GetCollection<BlogPost>("blogovi");
-            BlogPost bp = vratiJedanBlog(idBloga);
-            if (!komentar)
-            {
-                int brLikova = bp.Likes++;
-                ObjectId oid = new ObjectId(idBloga);
+        //public void dodajKomentar(string user, string mess, BsonDateTime date, string idBloga)
+        //{
+        //    var collection = this.database.GetCollection<BlogPost>("blogovi");
+        //    BlogPost bp = vratiJedanBlog(idBloga);
+        //    Comment com = new Comment { Username = user, Message = mess, DateCreated = date };
+        //    List<Comment> novaListaKomentara;
+        //    if (bp.Comments != null)
+        //    {
+        //        novaListaKomentara = bp.Comments;
+        //        novaListaKomentara.Add(com);
+        //    }
+        //    else
+        //    {
+        //        novaListaKomentara = new List<Comment>();
+        //        novaListaKomentara.Add(com);
+        //    }
+        //    ObjectId oid = new ObjectId(idBloga);
 
-                var filter = Builders<BlogPost>.Filter.Eq("Id", oid);
-                var update = Builders<BlogPost>.Update.Set("Likes", brLikova);
+        //    var filter = Builders<BlogPost>.Filter.Eq("Id", oid);
+        //    var update = Builders<BlogPost>.Update.Set("Comments", novaListaKomentara);
 
-                collection.UpdateOne(filter, update);
-            }
-            else
-            {
-                bp.Comments.Find(x => x.Id == new ObjectId(idKomentara)).Likes++;
+        //    collection.UpdateOne(filter, update);
+            
+        //}
 
-                ObjectId oid = new ObjectId(idBloga);
+        //public void lajkuj(string idBloga, string idKomentara, bool komentar)
+        //{
+        //    var collection = this.database.GetCollection<BlogPost>("blogovi");
+        //    BlogPost bp = vratiJedanBlog(idBloga);
+        //    if (!komentar)
+        //    {
+        //        int brLikova = bp.Likes++;
+        //        ObjectId oid = new ObjectId(idBloga);
 
-                var filter = Builders<BlogPost>.Filter.Eq("Id", oid);
-                var update = Builders<BlogPost>.Update.Set("Comments", bp.Comments);
+        //        var filter = Builders<BlogPost>.Filter.Eq("Id", oid);
+        //        var update = Builders<BlogPost>.Update.Set("Likes", brLikova);
 
-                collection.UpdateOne(filter, update);
-            }
-        }
+        //        collection.UpdateOne(filter, update);
+        //    }
+        //    else
+        //    {
+        //        bp.Comments.Find(x => x.Id == new ObjectId(idKomentara)).Likes++;
+
+        //        ObjectId oid = new ObjectId(idBloga);
+
+        //        var filter = Builders<BlogPost>.Filter.Eq("Id", oid);
+        //        var update = Builders<BlogPost>.Update.Set("Comments", bp.Comments);
+
+        //        collection.UpdateOne(filter, update);
+        //    }
+        //}
 
         public void updateUsera(string ime,string prezime,string opis,string id)
         {
@@ -167,6 +200,25 @@ namespace blogmongo.Models
             return lista.ToList<User>()[0];
 
 
+        }
+
+        public void dodajUFavorite(string blogID,string email)
+        {
+            BlogPost bp = this.vratiJedanBlog(blogID);
+            User korisnik = this.vratiUseraPoEmailu(email);
+            if (korisnik.Favorites != null)
+                korisnik.Favorites.Add(bp);
+            else
+            {
+                korisnik.Favorites = new List<BlogPost>();
+                korisnik.Favorites.Add(bp);
+            }
+
+            var collection = this.database.GetCollection<User>("useri");
+            var filter = Builders<User>.Filter.Eq("Email", email);
+            var update = Builders<User>.Update.Set("Favorites", korisnik.Favorites);
+
+            collection.UpdateOne(filter, update);
         }
 
     }

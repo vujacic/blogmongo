@@ -9,6 +9,7 @@
     <button id="blogs" class="btn" onclick="location.href='@Url.Action("Details","Blogs")/@Model.Id.ToString()'">Blogs</button>
     <button id="favorites" class="btn" onclick="location.href='@Url.Action("Details","Favorites")/@Model.Id.ToString()'">Favorites</button>
     <button id="update" class="btn" onclick="location.href='@Url.Action("Edit","Profile")/@Model.Id.ToString()'">Edit profile</button>
+    <button id="add" class="btn" onclick="location.href='@Url.Action("AddBlog","AddNewBlog")/@Model.Id.ToString()'">Add a new blog</button>
 </div>
 
 <h2>@Model.Ime @Model.Prezime</h2>
@@ -22,9 +23,11 @@
             var q = "@User.Identity.GetUserName()";
             if (p==q){
                 $("#update").show();
+                $("#add").show();
             }
             else {
                 $("#update").hide();
+                $("#add").hide();
             }
         });
     </script>
